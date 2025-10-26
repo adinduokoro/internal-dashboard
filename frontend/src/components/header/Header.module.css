@@ -1,9 +1,9 @@
 .header {
   display: flex;
-  height: 4.3125rem;
-  padding: 0 1.5rem;
+  padding: 1rem 1.5rem;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
   flex-shrink: 0;
 }
 
@@ -20,7 +20,6 @@
   display: flex;
   width: 2rem;
   height: 2rem;
-  padding-right: 0.001rem;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
