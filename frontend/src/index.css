@@ -39,6 +39,21 @@ input {
   box-sizing: border-box;
 }
 
+textarea {
+  all: unset;               /* removes ALL browser default styles */
+  resize: none;             /* disables manual resizing */
+  box-sizing: border-box;   /* ensures padding/border are counted in width */
+  font-family: inherit;     /* use global font */
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  height: auto;
+}
+
+
 input::placeholder {
   color: var(--accent-color);
   font-family: var(--primary-font);
