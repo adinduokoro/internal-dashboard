@@ -5,7 +5,7 @@ import Home from "./pages/home/Home";
 
 const App = () => {
   return (
-    <div className="App">
+    <div className="App" style={{height: "100%"}}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>

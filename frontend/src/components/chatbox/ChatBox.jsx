@@ -1,9 +1,10 @@
 import React from 'react'
+import styles from "./ChatBox.module.css"
 
 const ChatBox = () => {
   return (
-    <div>
-      
+    <div className={styles.chatbox}>
+      This the chatbox
     </div>
   )
 }

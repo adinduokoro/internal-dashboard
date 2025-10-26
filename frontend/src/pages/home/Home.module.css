@@ -1,0 +1,7 @@
+.home {
+    border: 2px solid green;
+    display: flex;
+align-items: flex-start;
+height: 100%;
+
+}
