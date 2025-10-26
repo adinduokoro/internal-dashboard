@@ -1,9 +1,9 @@
-.knowledgeBase{
-    border: 2px solid green;
-    max-width: 20rem;
-    width: 100%;
-height: 100%;
-flex-direction: column;
-align-items: flex-start;
-flex-shrink: 0;
+.knowledgeBase {
+  border: 2px solid green;
+  max-width: 20rem;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
 }
