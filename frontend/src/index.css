@@ -4,6 +4,15 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
 :root {
   /* FONT */
   --primary-font: "Arial", sans-serif;
@@ -43,5 +52,4 @@ button {
 
 .notes-text {
   font-family: var(--primary-font);
-
 }
