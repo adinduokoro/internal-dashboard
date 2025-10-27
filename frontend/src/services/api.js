@@ -49,6 +49,14 @@ class ApiService {
       method: 'DELETE',
     });
   }
+
+  // Chat API methods
+  async sendMessage(message, history = []) {
+    return this.request('/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message, history }),
+    });
+  }
 }
 
 export default new ApiService();

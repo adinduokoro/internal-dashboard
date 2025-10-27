@@ -32,4 +32,25 @@
   border-radius: 0.5rem;
   opacity: 0.5;
   background: #030213;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.chatInput button:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.chatInput button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.chatInput button.loading {
+  opacity: 0.7;
+}
+
+.chatInput textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
