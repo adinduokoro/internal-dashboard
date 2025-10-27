@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styles from "./ChatMessages.module.css";
 
 const ChatMessages = ({ messages = [], isLoading = false }) => {
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
+
   return (
     <div className={styles.chatMessages}>
       {messages.map((message) => (
@@ -19,6 +29,7 @@ const ChatMessages = ({ messages = [], isLoading = false }) => {
           <p className="body-text">Thinking...</p>
         </div>
       )}
+      <div ref={messagesEndRef} />
     </div>
   );
 };
