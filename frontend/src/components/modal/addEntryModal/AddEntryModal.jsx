@@ -13,7 +13,7 @@ const TAGS = [
   "Security",
 ];
 
-const AddEntryModal = ({ isOpen, onClose, onSubmit }) => {
+const AddEntryModal = ({ isOpen, onClose, onSubmit, isSubmitting = false }) => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
@@ -110,8 +110,12 @@ const AddEntryModal = ({ isOpen, onClose, onSubmit }) => {
             <button type="button" className={styles.cancelButton} onClick={handleClose}>
               Cancel
             </button>
-            <button type="submit" className={styles.submitButton}>
-              Add Entry
+            <button 
+              type="submit" 
+              className={styles.submitButton}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Adding...' : 'Add Entry'}
             </button>
           </div>
         </form>

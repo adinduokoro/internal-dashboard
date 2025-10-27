@@ -3,6 +3,7 @@ import styles from "./KnowledgePanel.module.css";
 import plus from "../../../assets/icons/plus.svg";
 import search from "../../../assets/icons/search.svg";
 import AddEntryModal from "../../modal/addEntryModal/AddEntryModal";
+import apiService from "../../../services/api";
 
 const TAGS = [
   "All",
@@ -17,9 +18,9 @@ const TAGS = [
   "Security",
 ];
 
-const KnowledgePanel = () => {
-  const [activeTag, setActiveTag] = useState("Benefits");
+const KnowledgePanel = ({ onEntryAdded, activeTag, onTagChange }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAddEntry = () => {
     setIsModalOpen(true);
@@ -29,10 +30,25 @@ const KnowledgePanel = () => {
     setIsModalOpen(false);
   };
 
-  const handleSubmitEntry = (entryData) => {
-    // Here you would typically send the data to your backend
-    console.log('New entry:', entryData);
-    // For now, we'll just log it
+  const handleSubmitEntry = async (entryData) => {
+    setIsSubmitting(true);
+    try {
+      const response = await apiService.createKnowledgeEntry(entryData);
+      console.log('Entry created successfully:', response);
+      
+      // Notify parent component that a new entry was added
+      if (onEntryAdded) {
+        onEntryAdded();
+      }
+      
+      // Close modal
+      handleCloseModal();
+    } catch (error) {
+      console.error('Failed to create entry:', error);
+      alert('Failed to create entry. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -57,7 +73,7 @@ const KnowledgePanel = () => {
             className={`${styles.tagButton} ${
               activeTag === tag ? styles.active : ""
             }`}
-            onClick={() => setActiveTag(tag)}
+            onClick={() => onTagChange && onTagChange(tag)}
           >
             <span className={`${styles.tagName} note-text`}>{tag}</span>
           </button>
@@ -68,6 +84,7 @@ const KnowledgePanel = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSubmit={handleSubmitEntry}
+        isSubmitting={isSubmitting}
       />
     </div>
   );

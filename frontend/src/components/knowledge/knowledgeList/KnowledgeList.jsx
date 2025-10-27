@@ -1,37 +1,42 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from "./KnowledgeList.module.css"
 import KnowledgeEntryModal from "../../modal/knowledgeEntryModal/KnowledgeEntryModal"
+import apiService from "../../../services/api"
 
-const ENTRIES = [
-  {
-    id: 1,
-    question: "What is the company's vacation policy?",
-    answer: "Employees are entitled to 20 days of paid vacation per year, which can be taken in increments of half days or full days. Vacation requests should be submitted at least 2 weeks in advance through the HR portal. Unused vacation days can be carried over to the next year up to a maximum of 5 days.",
-    tags: ["HR", "Policy", "Benefits"],
-  },
-  {
-    id: 2,
-    question: "How do I submit an expense report?",
-    answer: "Use the Finance Portal to submit expense reports. Upload receipts, categorize expenses, and submit for approval. Reimbursements are processed within 5 business days.",
-    tags: ["Finance", "Processes"],
-  },
-  {
-    id: 3,
-    question: "What are the remote work guidelines?",
-    answer: "Remote work is allowed up to 3 days per week with manager approval. Employees must maintain regular communication, attend all scheduled meetings, and ensure a professional workspace. All company policies apply regardless of work location.",
-    tags: ["HR", "Policy", "Remote"],
-  },
-  {
-    id: 4,
-    question: "How do I access the VPN?",
-    answer: "Download the company VPN client from the IT portal. Use your employee credentials to authenticate. Contact IT support if you experience connection issues or need assistance with setup.",
-    tags: ["IT", "Security", "Onboarding"],
-  },
-];
-
-const KnowledgeList = () => {
+const KnowledgeList = ({ activeTag, refreshTrigger }) => {
+  const [entries, setEntries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchEntries = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Convert "All" tag to null for API call
+      const tagFilter = activeTag === "All" ? null : activeTag;
+      const data = await apiService.getKnowledgeEntries(tagFilter);
+      
+      // Parse tags from comma-separated string to array
+      const processedEntries = data.map(entry => ({
+        ...entry,
+        tags: entry.tags ? entry.tags.split(',').map(tag => tag.trim()) : []
+      }));
+      
+      setEntries(processedEntries);
+    } catch (err) {
+      console.error('Failed to fetch entries:', err);
+      setError('Failed to load knowledge entries');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEntries();
+  }, [activeTag, refreshTrigger]);
 
   const handleCardClick = (entry) => {
     setSelectedEntry(entry);
@@ -43,24 +48,46 @@ const KnowledgeList = () => {
     setSelectedEntry(null);
   };
 
+  if (loading) {
+    return (
+      <div className={styles.knowledgeList}>
+        <div className={styles.loading}>Loading knowledge entries...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.knowledgeList}>
+        <div className={styles.error}>{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.knowledgeList}>
-      {ENTRIES.map((item) => (
-        <div 
-          key={item.id} 
-          className={styles.card}
-          onClick={() => handleCardClick(item)}
-        >
-          <p className={`${styles.question} body-text`}>{item.question}</p>
-          <div className={styles.tags}>
-            {item.tags.map((tag) => (
-              <span key={tag} className={styles.tag}>
-                <span className={`${styles.tagName} note-text`}>{tag}</span>
-              </span>
-            ))}
-          </div>
+      {entries.length === 0 ? (
+        <div className={styles.empty}>
+          No knowledge entries found for the selected tag.
         </div>
-      ))}
+      ) : (
+        entries.map((item) => (
+          <div 
+            key={item.id} 
+            className={styles.card}
+            onClick={() => handleCardClick(item)}
+          >
+            <p className={`${styles.question} body-text`}>{item.question}</p>
+            <div className={styles.tags}>
+              {item.tags.map((tag) => (
+                <span key={tag} className={styles.tag}>
+                  <span className={`${styles.tagName} note-text`}>{tag}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        ))
+      )}
       
       <KnowledgeEntryModal 
         isOpen={isModalOpen}
