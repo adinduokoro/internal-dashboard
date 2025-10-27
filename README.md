@@ -112,21 +112,21 @@ Approx **5 hours total**
 | ------- | ---------------------- | ------ |
 | Phase 2 | Database + Routing     | 1 hr   |
 
-- In Phase 2, I set up the database and backend routing with the help from AI tools. We used SQLite to store both the chat history and knowledge base entries. Then, we created Express routes to handle all communication between the frontend and backend. These included routes for the chat system (/api/chat), the knowledge base (/api/knowledge), and message history (/api/messages). I made sure the routes were correct using POSTMAN.
+- In Phase 2, I set up the database and backend routing with the help from AI tools. I used SQLite to store both the chat history and knowledge base entries. Then, I created Express routes to handle all communication between the frontend and backend. These included routes for the chat system (/api/chat), the knowledge base (/api/knowledge), and message history (/api/messages). I made sure the routes were correct using POSTMAN.
 
 
 | Phase   | Description            | Time   |
 | ------- | ---------------------- | ------ |
 | Phase 3 | Chat Integration       | 1.5 hr |
 
-- In Phase 3, I integrated the OpenAI API into the project to power the chat system. With AI help, we built a route that takes user messages, sends them to OpenAI, and then saves both the user’s question and the AI’s response to the SQLite database. We also added proper error handling, API key protection using dotenv, and made sure the chat could pull previous messages from the database for context — completing a fully functional AI-powered chat workflow.
+- In Phase 3, I integrated the OpenAI API into the project to power the chat system. With AI help, I built a route that takes user messages, sends them to OpenAI, and then saves both the user’s question and the AI’s response to the SQLite database. I also added proper error handling, API key protection using dotenv, and made sure the chat could pull previous messages from the database for context — completing a fully functional AI-powered chat workflow.
 
 
 | Phase   | Description            | Time   |
 | ------- | ---------------------- | ------ |
 | Phase 4 | Frontend Layout        | 1 hr   |
 
-- In Phase 4, I built the frontend structure using React (Vite), using Figma Creator to help design's overall layout and user flow. I did structured the project with key components like ChatBox, Message, Sidebar, and Dashboard, ensuring each one connected smoothly to the backend; however, some componets did get replaced or deleted due to the compatiabiltyiy isues with the figma design. Axios was used to handle API calls, style css was used to design the app with the  the final design matching the Figma concept here --> https://www.figma.com/design/2umQNM7K8uzMzulRT6ZoIj/Untitled?node-id=25-2&m=dev.
+- In Phase 4, I built the frontend structure using React (Vite), using Figma Creator to help design's overall layout and user flow. I did structured the project with key components like ChatBox, Message, Sidebar, and Dashboard; however, some componets did get replaced or deleted due to the compatibility issues with the figma design. Axios was used to handle API calls, style css was used to design the app with the final design matching the Figma concept here --> https://www.figma.com/design/2umQNM7K8uzMzulRT6ZoIj/Untitled?node-id=25-2&m=dev.
 
 
 | Phase   | Description            | Time   |
