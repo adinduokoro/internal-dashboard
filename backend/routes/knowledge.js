@@ -1,14 +1,19 @@
 import express from "express";
 import sqlite3 from "sqlite3";
+import dotenv from "dotenv";
+import OpenAI from "openai";
+
+dotenv.config();
 
 const router = express.Router();
 const db = new sqlite3.Database("./data.db");
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 /**
  * 📥 POST /api/knowledge
  * Save a new Q&A entry (question, answer, tags)
  */
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { question, answer, tags } = req.body;
 
   if (!question || !answer) {
@@ -20,7 +25,7 @@ router.post("/", (req, res) => {
   const tagString = Array.isArray(tags) ? tags.join(",") : tags || "";
 
   // First, check the current count of entries
-  db.get("SELECT COUNT(*) as count FROM knowledge_base", [], (err, row) => {
+  db.get("SELECT COUNT(*) as count FROM knowledge_base", [], async (err, row) => {
     if (err) {
       console.error("❌ DB Count Error:", err);
       return res.status(500).json({ error: "Failed to check knowledge base count." });
@@ -35,24 +40,39 @@ router.post("/", (req, res) => {
       });
     }
 
-    // Proceed with insertion if under the limit
-    db.run(
-      `INSERT INTO knowledge_base (question, answer, tags) VALUES (?, ?, ?)`,
-      [question, answer, tagString],
-      function (err) {
-        if (err) {
-          console.error("❌ DB Insert Error:", err);
-          return res.status(500).json({ error: "Failed to save knowledge entry." });
-        }
+    try {
+      // Generate embedding for the question and tags
+      console.log("🔍 Generating embedding for KB entry...");
+      const comparisonText = `${question} ${tagString}`;
+      const embeddingResponse = await openai.embeddings.create({
+        model: "text-embedding-3-large",
+        input: comparisonText,
+      });
+      
+      const embedding = JSON.stringify(embeddingResponse.data[0].embedding);
 
-        res.json({
-          id: this.lastID,
-          message: "✅ Knowledge entry saved successfully!",
-          count: currentCount + 1,
-          maxEntries: maxEntries
-        });
-      }
-    );
+      // Proceed with insertion including embedding
+      db.run(
+        `INSERT INTO knowledge_base (question, answer, tags, embedding) VALUES (?, ?, ?, ?)`,
+        [question, answer, tagString, embedding],
+        function (err) {
+          if (err) {
+            console.error("❌ DB Insert Error:", err);
+            return res.status(500).json({ error: "Failed to save knowledge entry." });
+          }
+
+          res.json({
+            id: this.lastID,
+            message: "✅ Knowledge entry saved successfully!",
+            count: currentCount + 1,
+            maxEntries: maxEntries
+          });
+        }
+      );
+    } catch (error) {
+      console.error("❌ Embedding generation error:", error);
+      return res.status(500).json({ error: "Failed to generate embedding for the question." });
+    }
   });
 });
 

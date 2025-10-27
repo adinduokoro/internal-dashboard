@@ -18,9 +18,19 @@ db.serialize(() => {
       question TEXT,
       answer TEXT,
       tags TEXT,
+      embedding TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+  
+  // Add embedding column if it doesn't exist (for existing databases)
+  db.run(`
+    ALTER TABLE knowledge_base ADD COLUMN embedding TEXT
+  `, (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Migration error:', err);
+    }
+  });
 });
 
 db.close();
