@@ -53,6 +53,11 @@ const KnowledgeList = ({ activeTag, searchQuery, refreshTrigger }) => {
     setSelectedEntry(null);
   };
 
+  const handleEntryDeleted = () => {
+    // Refresh the entries list after deletion
+    fetchEntries();
+  };
+
   if (loading) {
     return (
       <div className={styles.knowledgeList}>
@@ -98,6 +103,7 @@ const KnowledgeList = ({ activeTag, searchQuery, refreshTrigger }) => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         entry={selectedEntry}
+        onEntryDeleted={handleEntryDeleted}
       />
     </div>
   )
