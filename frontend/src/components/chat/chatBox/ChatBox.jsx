@@ -36,7 +36,8 @@ const ChatBox = () => {
         id: Date.now() + 1,
         text: response.reply,
         isUser: false,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        source: response.source // Add source info if available
       };
       
       setMessages(prev => [...prev, assistantMessage]);

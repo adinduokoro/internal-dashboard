@@ -22,6 +22,16 @@ const ChatMessages = ({ messages = [], isLoading = false }) => {
           } ${message.isError ? styles.errorMessage : ''}`}
         >
           <p className="body-text">{message.text}</p>
+          {message.source === 'knowledge-base' && (
+            <div className={styles.sourceBadge}>
+              📚 From Knowledge Base
+            </div>
+          )}
+          {message.source === 'knowledge-base-context' && (
+            <div className={styles.sourceBadge}>
+              🔗 From Knowledge Base (Follow-up)
+            </div>
+          )}
         </div>
       ))}
       {isLoading && (
