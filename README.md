@@ -147,6 +147,9 @@ Approx **5 hours total**
 ## 💡 Next Improvements
 
 🔹 Add authentication (admin vs employee roles)
+🔹 Profile picture w/ time stamps
+🔹 Content moderation
+🔹 GSAP Animations on messages
 🔹 Add analytics (usage stats, top searched terms)
 🔹 Integrate vector embeddings for deeper semantic matching
 🔹 Save chat history per session
