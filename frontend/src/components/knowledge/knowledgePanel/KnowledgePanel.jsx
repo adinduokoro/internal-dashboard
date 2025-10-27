@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./KnowledgePanel.module.css";
 import plus from "../../../assets/icons/plus.svg";
 import search from "../../../assets/icons/search.svg";
+import AddEntryModal from "../../modal/addEntryModal/AddEntryModal";
 
 const TAGS = [
   "All",
@@ -18,12 +19,27 @@ const TAGS = [
 
 const KnowledgePanel = () => {
   const [activeTag, setActiveTag] = useState("Benefits");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleAddEntry = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSubmitEntry = (entryData) => {
+    // Here you would typically send the data to your backend
+    console.log('New entry:', entryData);
+    // For now, we'll just log it
+  };
 
   return (
     <div className={styles.knowledgePanel}>
       <div className={styles.header}>
         <p className="header">Knowledge Base</p>
-        <button className={`${styles.entryButton}`}>
+        <button className={`${styles.entryButton}`} onClick={handleAddEntry}>
           <img src={plus} alt="Add Entry Here" />
           <span className="body-text">Add Entry</span>
         </button>
@@ -47,6 +63,12 @@ const KnowledgePanel = () => {
           </button>
         ))}
       </div>
+      
+      <AddEntryModal 
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitEntry}
+      />
     </div>
   );
 };
