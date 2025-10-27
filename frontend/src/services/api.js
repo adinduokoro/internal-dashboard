@@ -34,7 +34,10 @@ class ApiService {
     
     const queryString = params.toString();
     const endpoint = queryString ? `/knowledge?${queryString}` : '/knowledge';
-    return this.request(endpoint);
+    const response = await this.request(endpoint);
+    
+    // Return the full response object with entries, count, maxEntries, canAddMore
+    return response;
   }
 
   async createKnowledgeEntry(entryData) {

@@ -19,21 +19,41 @@ router.post("/", (req, res) => {
 
   const tagString = Array.isArray(tags) ? tags.join(",") : tags || "";
 
-  db.run(
-    `INSERT INTO knowledge_base (question, answer, tags) VALUES (?, ?, ?)`,
-    [question, answer, tagString],
-    function (err) {
-      if (err) {
-        console.error("❌ DB Insert Error:", err);
-        return res.status(500).json({ error: "Failed to save knowledge entry." });
-      }
+  // First, check the current count of entries
+  db.get("SELECT COUNT(*) as count FROM knowledge_base", [], (err, row) => {
+    if (err) {
+      console.error("❌ DB Count Error:", err);
+      return res.status(500).json({ error: "Failed to check knowledge base count." });
+    }
 
-      res.json({
-        id: this.lastID,
-        message: "✅ Knowledge entry saved successfully!",
+    const currentCount = row.count;
+    const maxEntries = 50;
+
+    if (currentCount >= maxEntries) {
+      return res.status(400).json({ 
+        error: `Knowledge base is at maximum capacity (${maxEntries} entries). Please delete some entries before adding new ones.` 
       });
     }
-  );
+
+    // Proceed with insertion if under the limit
+    db.run(
+      `INSERT INTO knowledge_base (question, answer, tags) VALUES (?, ?, ?)`,
+      [question, answer, tagString],
+      function (err) {
+        if (err) {
+          console.error("❌ DB Insert Error:", err);
+          return res.status(500).json({ error: "Failed to save knowledge entry." });
+        }
+
+        res.json({
+          id: this.lastID,
+          message: "✅ Knowledge entry saved successfully!",
+          count: currentCount + 1,
+          maxEntries: maxEntries
+        });
+      }
+    );
+  });
 });
 
 /**
@@ -72,7 +92,20 @@ router.get("/", (req, res) => {
       return res.status(500).json({ error: "Failed to fetch knowledge entries." });
     }
 
-    res.json(rows);
+    // Get total count for limit information
+    db.get("SELECT COUNT(*) as count FROM knowledge_base", [], (countErr, countRow) => {
+      if (countErr) {
+        console.error("❌ DB Count Error:", countErr);
+        return res.json(rows); // Return entries without count info if count fails
+      }
+
+      res.json({
+        entries: rows,
+        count: countRow.count,
+        maxEntries: 50,
+        canAddMore: countRow.count < 50
+      });
+    });
   });
 });
 

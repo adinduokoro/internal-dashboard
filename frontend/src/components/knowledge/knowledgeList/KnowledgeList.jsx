@@ -19,7 +19,10 @@ const KnowledgeList = ({ activeTag, searchQuery, refreshTrigger }) => {
       const tagFilter = activeTag === "All" ? null : activeTag;
       const searchFilter = searchQuery && searchQuery.trim() ? searchQuery.trim() : null;
       
-      const data = await apiService.getKnowledgeEntries(tagFilter, searchFilter);
+      const response = await apiService.getKnowledgeEntries(tagFilter, searchFilter);
+      
+      // Handle new API response format with entries, count, maxEntries, canAddMore
+      const data = response.entries || response; // Fallback to direct array for backward compatibility
       
       // Parse tags from comma-separated string to array
       const processedEntries = data.map(entry => ({
