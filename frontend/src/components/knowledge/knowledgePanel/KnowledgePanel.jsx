@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styles from "./KnowledgePanel.module.css";
 import plus from "../../../assets/icons/plus.svg";
 import search from "../../../assets/icons/search.svg";
@@ -18,7 +18,7 @@ const TAGS = [
   "Security",
 ];
 
-const KnowledgePanel = ({ onEntryAdded, activeTag, onTagChange }) => {
+const KnowledgePanel = ({ onEntryAdded, activeTag, onTagChange, searchQuery, onSearchChange }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -51,6 +51,13 @@ const KnowledgePanel = ({ onEntryAdded, activeTag, onTagChange }) => {
     }
   };
 
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    if (onSearchChange) {
+      onSearchChange(value);
+    }
+  };
+
   return (
     <div className={styles.knowledgePanel}>
       <div className={styles.header}>
@@ -63,7 +70,12 @@ const KnowledgePanel = ({ onEntryAdded, activeTag, onTagChange }) => {
 
       <div className={styles.search}>
         <img src={search} alt="" />
-        <input type="text" placeholder="Search Knowledge base..." />
+        <input 
+          type="text" 
+          placeholder="Search Knowledge base..." 
+          value={searchQuery || ''}
+          onChange={handleSearchChange}
+        />
       </div>
 
       <div className={styles.tagPanel}>

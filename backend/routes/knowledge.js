@@ -38,18 +38,33 @@ router.post("/", (req, res) => {
 
 /**
  * 📤 GET /api/knowledge
- * Retrieve all Q&A entries (with optional tag filtering)
+ * Retrieve all Q&A entries (with optional tag filtering and search)
  */
 router.get("/", (req, res) => {
-  const { tag } = req.query;
+  const { tag, search } = req.query;
 
-  let query = "SELECT * FROM knowledge_base ORDER BY created_at DESC";
+  let query = "SELECT * FROM knowledge_base";
+  let conditions = [];
   let params = [];
 
+  // Add tag filtering
   if (tag) {
-    query = "SELECT * FROM knowledge_base WHERE tags LIKE ? ORDER BY created_at DESC";
+    conditions.push("tags LIKE ?");
     params.push(`%${tag}%`);
   }
+
+  // Add search functionality (searches both question and answer)
+  if (search) {
+    conditions.push("(question LIKE ? OR answer LIKE ?)");
+    params.push(`%${search}%`, `%${search}%`);
+  }
+
+  // Build the complete query
+  if (conditions.length > 0) {
+    query += " WHERE " + conditions.join(" AND ");
+  }
+  
+  query += " ORDER BY created_at DESC";
 
   db.all(query, params, (err, rows) => {
     if (err) {

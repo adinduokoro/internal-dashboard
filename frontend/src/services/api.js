@@ -27,8 +27,13 @@ class ApiService {
   }
 
   // Knowledge Base API methods
-  async getKnowledgeEntries(tag = null) {
-    const endpoint = tag ? `/knowledge?tag=${encodeURIComponent(tag)}` : '/knowledge';
+  async getKnowledgeEntries(tag = null, search = null) {
+    const params = new URLSearchParams();
+    if (tag) params.append('tag', tag);
+    if (search) params.append('search', search);
+    
+    const queryString = params.toString();
+    const endpoint = queryString ? `/knowledge?${queryString}` : '/knowledge';
     return this.request(endpoint);
   }
 

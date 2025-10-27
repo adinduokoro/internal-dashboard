@@ -3,7 +3,7 @@ import styles from "./KnowledgeList.module.css"
 import KnowledgeEntryModal from "../../modal/knowledgeEntryModal/KnowledgeEntryModal"
 import apiService from "../../../services/api"
 
-const KnowledgeList = ({ activeTag, refreshTrigger }) => {
+const KnowledgeList = ({ activeTag, searchQuery, refreshTrigger }) => {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,7 +17,9 @@ const KnowledgeList = ({ activeTag, refreshTrigger }) => {
       
       // Convert "All" tag to null for API call
       const tagFilter = activeTag === "All" ? null : activeTag;
-      const data = await apiService.getKnowledgeEntries(tagFilter);
+      const searchFilter = searchQuery && searchQuery.trim() ? searchQuery.trim() : null;
+      
+      const data = await apiService.getKnowledgeEntries(tagFilter, searchFilter);
       
       // Parse tags from comma-separated string to array
       const processedEntries = data.map(entry => ({
@@ -36,7 +38,7 @@ const KnowledgeList = ({ activeTag, refreshTrigger }) => {
 
   useEffect(() => {
     fetchEntries();
-  }, [activeTag, refreshTrigger]);
+  }, [activeTag, searchQuery, refreshTrigger]);
 
   const handleCardClick = (entry) => {
     setSelectedEntry(entry);
