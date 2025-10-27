@@ -56,9 +56,25 @@ const ChatBox = () => {
     }
   };
 
+  const handleClearHistory = async () => {
+    try {
+      // Clear backend history
+      await apiService.deleteMessages();
+      
+      // Clear frontend messages
+      setMessages([]);
+      
+      console.log('Chat history cleared successfully');
+    } catch (error) {
+      console.error('Failed to clear chat history:', error);
+      // Still clear frontend messages even if backend fails
+      setMessages([]);
+    }
+  };
+
   return (
     <div className={`${styles.chatbox}`}>
-      <ChatHeader />
+      <ChatHeader onClearHistory={handleClearHistory} />
       <ChatMessages messages={messages} isLoading={isLoading} />
       <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
     </div>

@@ -57,6 +57,12 @@ class ApiService {
       body: JSON.stringify({ message, history }),
     });
   }
+
+  async deleteMessages() {
+    return this.request('/messages', {
+      method: 'DELETE',
+    });
+  }
 }
 
 export default new ApiService();
