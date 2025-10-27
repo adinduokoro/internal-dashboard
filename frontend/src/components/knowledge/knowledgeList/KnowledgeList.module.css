@@ -22,6 +22,14 @@
   border-radius: 0.625rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: var(--primary-white);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
 .tags {
